@@ -4,8 +4,7 @@ workspace {
 
     !identifiers hierarchical
 
-    #!docs documentation
-    #!adrs decisions
+    !adrs decisions
 
     # Модель архитектуры
     model {
