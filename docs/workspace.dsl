@@ -11,8 +11,16 @@ workspace {
         conference = softwareSystem "Сайт конференции" {
             description "Сайт для выставления информации о конференциях и докладах на них"
 
-            conference_service = container "conference service" {
-                description "API для получения и управления конференциями, докладами и пользователями"
+            api_gateway = container "api_gateway" {
+                description "Входной API для обращения к основынм сервисам приложения"
+            }
+
+            conferences_service = container "conferences service" {
+                description "API для получения и управления конференциями и докладами"
+            }
+            
+            users_service = container "users service" {
+                description "API для получения и управления пользователями"
             }
 
             group "Слой хранения данных" {
@@ -29,17 +37,29 @@ workspace {
                 }
             }
 
-            user -> conference_service "API команды на управление и получение данных о конференциях, докладах и пользователях"
+            user -> api_gateway "API команды на управление и получение данных о конференциях, докладах и пользователях"
+            api_gateway -> conferences_service "внутренние API команды на управление и получение данных о конференциях, докладах"
+            api_gateway -> users_service "внутренние API команды на управление и получение данных о пользователях"
 
-            conference_service -> database "Получение/обновление данных" "TCP 5432"
-            conference_service -> cache "Получение/обновление данных о пользователях" "TCP 6379"
+            conferences_service -> database "Получение/обновление данных о конференциях и докладах" "TCP 5432"
+            users_service -> database "Получение/обновление данных о пользователях" "TCP 5432"
+            users_service -> cache "Получение/обновление данных о пользователях" "TCP 6379"
         }
 
         user -> conference "Управление и получение данных о конференциях, докладах и пользователях"
 
         deploymentEnvironment "Production" {
-            deploymentNode "Application server" {
-                containerInstance conference.conference_service
+            deploymentNode "Conference server" {
+                containerInstance conference.conferences_service
+                instances 1
+                properties {
+                    "cpu" "4"
+                    "ram" "4Gb"
+                }
+            }
+            
+            deploymentNode "User server" {
+                containerInstance conference.users_service
                 instances 1
                 properties {
                     "cpu" "4"
@@ -75,46 +95,53 @@ workspace {
 
         dynamic conference "UC01" "Создание нового пользователя" {
             autoLayout
-            user -> conference.conference_service "Создать нового пользователя (POST /user)"
-            conference.conference_service -> conference.database "Сохранить данные о пользователе" 
+            user -> conference.api_gateway "Создать нового пользователя (POST /user)"
+            conference.api_gateway -> conference.users_service "Создать нового пользователя (POST /user)"
+            conference.users_service -> conference.database "Сохранить данные о пользователе" 
         }
 
         dynamic conference "UC02" "Поиск пользователя по логину" {
             autoLayout
-            user -> conference.conference_service "Получить пользоватлея по логину (GET /user/login/{login})"
-            conference.conference_service -> conference.database "Получить данные о пользователе" 
+            user -> conference.api_gateway "Получить пользоватлея по логину (GET /user/login/{login})"
+            conference.api_gateway -> conference.users_service "Получить пользоватлея по логину (GET /user/login/{login})"
+            conference.users_service -> conference.database "Получить данные о пользователе" 
         }
         
         dynamic conference "UC03" "Поиск пользователя по маске имя и фамилия" {
             autoLayout
-            user -> conference.conference_service "Получить пользователя по ФИ (GET /user/name/{name})"
-            conference.conference_service -> conference.cache "Получить данные о пользователе, если они закэшированы" 
-            conference.conference_service -> conference.database "Получить данные о пользователе, если их не закэшированы" 
-            conference.conference_service -> conference.cache "Записать полученные данные о пользователе" 
+            user -> conference.api_gateway "Получить пользователя по ФИ (GET /user/name/{name})"
+            conference.api_gateway -> conference.users_service "Получить пользователя по ФИ (GET /user/name/{name})"
+            conference.users_service -> conference.cache "Получить данные о пользователе, если они закэшированы" 
+            conference.users_service -> conference.database "Получить данные о пользователе, если их не закэшированы" 
+            conference.users_service -> conference.cache "Записать полученные данные о пользователе" 
         }
          
         dynamic conference "UC04" "Создание доклада" {
             autoLayout
-            user -> conference.conference_service "Добавить доклад (POST /lecture)"
-            conference.conference_service -> conference.database "Сохранить данные о докладе" 
+            user -> conference.api_gateway "Добавить доклад (POST /lecture)"
+            conference.api_gateway -> conference.conferences_service "Добавить доклад (POST /lecture)"
+            conference.conferences_service -> conference.database "Сохранить данные о докладе" 
         }
 
         dynamic conference "UC05" "Получение списка всех докладов" {
             autoLayout
-            user -> conference.conference_service "Получить доклады (GET /lectures)"
-            conference.conference_service -> conference.database "Получить данные о всех докладах" 
+            user -> conference.api_gateway "Получить доклады (GET /lectures)"
+            conference.api_gateway -> conference.conferences_service "Получить доклады (GET /lectures)"
+            conference.conferences_service -> conference.database "Получить данные о всех докладах" 
         }
         
         dynamic conference "UC06" "Добавление доклада в конференцию" {
             autoLayout
-            user -> conference.conference_service "Добавить конференцию (POST /conference)"
-            conference.conference_service -> conference.database "Сохранить данные о конференции" 
+            user -> conference.api_gateway "Добавить конференцию (POST /conference)"
+            conference.api_gateway -> conference.conferences_service "Добавить конференцию (POST /conference)"
+            conference.conferences_service -> conference.database "Сохранить данные о конференции" 
         }
 
         dynamic conference "UC07" "Получение списка докладов в конференции" {
             autoLayout
-            user -> conference.conference_service "Получить доклады конференции (GET /conference/{conference_id}/lectures)"
-            conference.conference_service -> conference.database "Получить данные о всех докладах конференции" 
+            user -> conference.api_gateway "Получить доклады конференции (GET /conference/{conference_id}/lectures)"
+            conference.api_gateway -> conference.conferences_service "Получить доклады конференции (GET /conference/{conference_id}/lectures)"
+            conference.conferences_service -> conference.database "Получить данные о всех докладах конференции" 
         }
 
         styles {
