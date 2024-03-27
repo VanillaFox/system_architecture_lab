@@ -1,0 +1,150 @@
+definitions:
+  models.User:
+    properties:
+      full_name:
+        example: Иван Иванов
+        type: string
+      password:
+        example: pass
+        type: string
+      username:
+        example: ivan
+        type: string
+    type: object
+info:
+  contact:
+    name: Maria Kruglova
+  title: Users swagger
+  version: "1.0"
+paths:
+  /api/v1/users:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: user body
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+      summary: Создать пользователя
+      tags:
+      - users
+  /api/v1/users/:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "500":
+          description: Internal Server Error
+      summary: Получить список всех пользователей
+      tags:
+      - users
+  /api/v1/users/{username}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Логин
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+      summary: Удалить пользователя
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Логин
+        in: path
+        name: username
+        required: true
+        type: string
+      - description: user body
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+      summary: Обновить пользователя
+      tags:
+      - users
+  /api/v1/users/fullname/{full_name_prefix}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Имя пользователя
+        in: path
+        name: full_name_prefix
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "500":
+          description: Internal Server Error
+      summary: Получить пользователя по маске ФИ
+      tags:
+      - users
+  /api/v1/users/username/{username}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Логин
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "500":
+          description: Internal Server Error
+      summary: Получить пользователя по логину
+      tags:
+      - users
+swagger: "2.0"

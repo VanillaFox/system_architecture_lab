@@ -1,15 +1,23 @@
 version: "3"
 
 services:
-  app:
-    build: .
+  user-service:
+    build:
+      dockerfile: user.dockerfile
+    ports:
+      - "8080:8080"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    env_file: variables.env
   postgres:
-    image: postgres:16.2
-    environment:
-      POSTGRES_DB: "conf"
-      POSTGRES_USER: "conf"
-      POSTGRES_PASSWORD: "pass"
+    build:
+      dockerfile: db.dockerfile
     ports:
       - "5432:5432"
+    env_file: variables.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U conf"]
+      interval: 5s
+      timeout: 5s
+      retries: 3

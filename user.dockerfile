@@ -4,7 +4,7 @@ WORKDIR /app
 COPY go.mod .
 COPY go.sum .
 COPY . .
-RUN GOOS=linux GOARCH=amd64 go build -o main ./cmd/api-server/
+RUN GOOS=linux GOARCH=amd64 go build -o main ./cmd/users/
 
 FROM debian:buster-slim
 WORKDIR /app
