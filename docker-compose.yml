@@ -40,9 +40,9 @@ services:
       test:
         [
           "CMD",
-          "mongo",
+          "mongosh",
           "--quiet",
-          "127.0.0.1/test",
+          "127.0.0.1/conf",
           "--eval",
           "'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)'",
         ]
