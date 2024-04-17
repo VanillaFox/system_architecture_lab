@@ -1,0 +1,347 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Conferences swagger",
+        "contact": {
+            "name": "Maria Kruglova"
+        },
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/v1/conferences": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "conferences"
+                ],
+                "summary": "Получение списка конференций",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ConferenceReadModel"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "conferences"
+                ],
+                "summary": "Создать конференцию",
+                "parameters": [
+                    {
+                        "description": "conference body",
+                        "name": "conference",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ConferenceCreateModel"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/conferences/{conference_object_id}/reports": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "reports"
+                ],
+                "summary": "Получить доклады конференции",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID конференции",
+                        "name": "conference_object_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ReportReadModel"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "reports"
+                ],
+                "summary": "Создать доклад",
+                "parameters": [
+                    {
+                        "description": "report body",
+                        "name": "conference",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ReportCreateModel"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID конференции",
+                        "name": "conference_object_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/conferences/{object_id}": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "conferences"
+                ],
+                "summary": "Обновление конференции",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID конференции",
+                        "name": "object_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "conference body",
+                        "name": "conference",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ConferenceCreateModel"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "conferences"
+                ],
+                "summary": "Удаление конференции",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID конференции",
+                        "name": "object_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/reports/{report_object_id}": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "reports"
+                ],
+                "summary": "Обновить доклад",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID доклада",
+                        "name": "report_object_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "report body",
+                        "name": "conference",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ReportCreateModel"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "reports"
+                ],
+                "summary": "Удалить доклад",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID доклада",
+                        "name": "report_object_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.ConferenceCreateModel": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string",
+                    "example": "2015-09-15T14:00:12-00:00"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Конференция по JS"
+                }
+            }
+        },
+        "models.ConferenceReadModel": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string",
+                    "example": "2015-09-15T14:00:12-00:00"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Конференция по JS"
+                }
+            }
+        },
+        "models.ReportCreateModel": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "Первый докад"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Доклад 1"
+                }
+            }
+        },
+        "models.ReportReadModel": {
+            "type": "object",
+            "properties": {
+                "conference_object_id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Первый докад"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Доклад 1"
+                }
+            }
+        }
+    }
+}

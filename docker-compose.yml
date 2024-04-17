@@ -4,20 +4,52 @@ services:
   user-service:
     build:
       dockerfile: user.dockerfile
+    container_name: user-service
     ports:
       - "8080:8080"
     depends_on:
       postgres:
         condition: service_healthy
     env_file: variables.env
+  conference-service:
+    build:
+      dockerfile: conferences.dockerfile
+    container_name: conference-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    env_file: variables.env
   postgres:
     build:
-      dockerfile: db.dockerfile
+      dockerfile: postgres.dockerfile
+    container_name: postgres-db
     ports:
       - "5432:5432"
     env_file: variables.env
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U conf"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+  mongo:
+    build:
+      dockerfile: mongo.dockerfile
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    env_file: variables.env
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "--quiet",
+          "127.0.0.1/conf",
+          "--eval",
+          "'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)'",
+        ]
       interval: 5s
       timeout: 5s
       retries: 3

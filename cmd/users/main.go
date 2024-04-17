@@ -16,7 +16,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v4/pgxpool"
 
-	_ "github.com/VanillaFox/system_architecture_lab/docs"
+	_ "github.com/VanillaFox/system_architecture_lab/docs/users"
 )
 
 func main() {
@@ -45,6 +45,7 @@ func main() {
 	cfg.ConnConfig.PreferSimpleProtocol = true
 
 	pool, err := pgxpool.ConnectConfig(ctx, cfg)
+
 	if err != nil {
 		panic(err)
 	}
