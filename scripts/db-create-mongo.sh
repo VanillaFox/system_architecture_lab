@@ -1,3 +1,5 @@
+#!/bin/sh
+
 mongosh <<EOF
 use $MONGO_INITDB_DATABASE
 
