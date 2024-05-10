@@ -50,6 +50,7 @@ func (h *UserHandler) createUser(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param username path string true "Логин"
+// @Param Authorization header string true "Auth"
 // @Success 200 {object} models.User
 // @Failure 500
 // @Router /api/v1/users/username/{username} [get]
@@ -73,6 +74,7 @@ func (h *UserHandler) getUserByUsername(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param full_name_prefix path string true "Имя пользователя"
+// @Param Authorization header string true "Auth"
 // @Success 200 {object} models.Users
 // @Failure 500
 // @Router /api/v1/users/fullname/{full_name_prefix} [get]
@@ -95,6 +97,7 @@ func (h *UserHandler) getUserByFullName(c *gin.Context) {
 // @tags users
 // @Accept json
 // @Produce json
+// @Param Authorization header string true "Auth"
 // @Success 200 {object} models.Users
 // @Failure 500
 // @Router /api/v1/users/ [get]
@@ -117,6 +120,7 @@ func (h *UserHandler) getUsers(c *gin.Context) {
 // @Produce json
 // @Param username path string true "Логин"
 // @Param user body models.User true "user body"
+// @Param Authorization header string true "Auth"
 // @Success 200
 // @Failure 500
 // @Router /api/v1/users/{username} [put]
@@ -147,6 +151,7 @@ func (h *UserHandler) updateUser(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param username path string true "Логин"
+// @Param Authorization header string true "Auth"
 // @Success 200
 // @Failure 500
 // @Router /api/v1/users/{username} [delete]

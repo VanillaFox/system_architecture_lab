@@ -12,6 +12,7 @@ import (
 	"github.com/VanillaFox/system_architecture_lab/users/adaptres/postgres"
 	"github.com/VanillaFox/system_architecture_lab/users/app/services"
 	"github.com/VanillaFox/system_architecture_lab/users/restapi"
+	"github.com/VanillaFox/system_architecture_lab/users/restapi/auth"
 	v1 "github.com/VanillaFox/system_architecture_lab/users/restapi/v1"
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -50,12 +51,19 @@ func main() {
 		panic(err)
 	}
 
+	jwtSecretKey := []byte(os.Getenv("JWT_SECRET_KEY"))
+
+	v1.InitJwtSecretKey(jwtSecretKey)
+
 	repository := postgres.NewRepository(pool)
 
 	userService := services.NewUserService(repository)
 
+	authService := services.NewAuthService(repository, jwtSecretKey)
+
 	routerHandler := restapi.NewRouter(
 		v1.NewUserHandler(userService),
+		auth.NewAuthHandler(authService),
 	)
 
 	r := gin.Default()

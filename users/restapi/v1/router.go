@@ -11,9 +11,13 @@ func RegisterRoutes(
 	apiV1 := router.Group("/api/v1/users", HanleErrors)
 
 	apiV1.POST("", usersHandler.createUser)
-	apiV1.GET("username/:username", usersHandler.getUserByUsername)
-	apiV1.GET("fullname/:full_name_prefix", usersHandler.getUserByFullName)
-	apiV1.GET("", usersHandler.getUsers)
-	apiV1.PUT(":username", usersHandler.updateUser)
-	apiV1.DELETE(":username", usersHandler.deleteUser)
+
+	apiV1Secured := router.Group("/api/v1/users", HanleErrors)
+	apiV1Secured.Use(AuthMiddleware)
+
+	apiV1Secured.GET("username/:username", usersHandler.getUserByUsername)
+	apiV1Secured.GET("fullname/:full_name_prefix", usersHandler.getUserByFullName)
+	apiV1Secured.GET("", usersHandler.getUsers)
+	apiV1Secured.PUT(":username", usersHandler.updateUser)
+	apiV1Secured.DELETE(":username", usersHandler.deleteUser)
 }

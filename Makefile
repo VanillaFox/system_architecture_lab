@@ -22,3 +22,6 @@ mongo-db-fill:
 
 build-conferences:
 	go build -o /dev/null ./cmd/conferences/
+
+build-user:
+	go build -o /dev/null ./cmd/users/

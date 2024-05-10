@@ -4,6 +4,10 @@ import "golang.org/x/crypto/bcrypt"
 
 type Password string
 
+func NewPassword(val string) Password {
+	return Password(val)
+}
+
 func (p Password) Hash() (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(p), 8)
 	return string(bytes), err
