@@ -29,6 +29,15 @@ const docTemplate = `{
                     "conferences"
                 ],
                 "summary": "Получение списка конференций",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Auth",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -64,6 +73,13 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/models.ConferenceCreateModel"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Auth",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -94,6 +110,13 @@ const docTemplate = `{
                         "description": "ID конференции",
                         "name": "conference_object_id",
                         "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Auth",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],
@@ -139,6 +162,13 @@ const docTemplate = `{
                         "name": "conference_object_id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Auth",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -179,6 +209,13 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/models.ConferenceCreateModel"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Auth",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -207,6 +244,13 @@ const docTemplate = `{
                         "description": "ID конференции",
                         "name": "object_id",
                         "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Auth",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],
@@ -248,6 +292,13 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/models.ReportCreateModel"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Auth",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -276,6 +327,13 @@ const docTemplate = `{
                         "description": "ID доклада",
                         "name": "report_object_id",
                         "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Auth",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],

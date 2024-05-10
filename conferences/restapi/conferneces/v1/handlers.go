@@ -24,6 +24,7 @@ func NewConferenceHandler(conferenceService *services.ConferenceService) *Confer
 // @Accept json
 // @Produce json
 // @Param conference body models.ConferenceCreateModel true "conference body"
+// @Param Authorization header string true "Auth"
 // @Success 200
 // @Failure 500
 // @Router /api/v1/conferences [post]
@@ -50,6 +51,7 @@ func (h *ConferenceHandler) createConference(c *gin.Context) {
 // @tags conferences
 // @Accept json
 // @Produce json
+// @Param Authorization header string true "Auth"
 // @Success 200 {object} models.Conferences
 // @Failure 500
 // @Router /api/v1/conferences [get]
@@ -72,6 +74,7 @@ func (h *ConferenceHandler) getConferences(c *gin.Context) {
 // @Produce json
 // @Param object_id path string true "ID конференции"
 // @Param conference body models.ConferenceCreateModel true "conference body"
+// @Param Authorization header string true "Auth"
 // @Success 200
 // @Failure 500
 // @Router /api/v1/conferences/{object_id} [put]
@@ -109,6 +112,7 @@ func (h *ConferenceHandler) updateConference(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param object_id path string true "ID конференции"
+// @Param Authorization header string true "Auth"
 // @Success 200
 // @Failure 500
 // @Router /api/v1/conferences/{object_id} [delete]
