@@ -17,6 +17,26 @@ info:
   title: Users swagger
   version: "1.0"
 paths:
+  /api/auth:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+      summary: Аутентификация
+      tags:
+      - auth
   /api/v1/users:
     post:
       consumes:
@@ -42,6 +62,12 @@ paths:
     get:
       consumes:
       - application/json
+      parameters:
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -64,6 +90,11 @@ paths:
       - description: Логин
         in: path
         name: username
+        required: true
+        type: string
+      - description: Auth
+        in: header
+        name: Authorization
         required: true
         type: string
       produces:
@@ -91,6 +122,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/models.User'
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -109,6 +145,11 @@ paths:
       - description: Имя пользователя
         in: path
         name: full_name_prefix
+        required: true
+        type: string
+      - description: Auth
+        in: header
+        name: Authorization
         required: true
         type: string
       produces:
@@ -133,6 +174,11 @@ paths:
       - description: Логин
         in: path
         name: username
+        required: true
+        type: string
+      - description: Auth
+        in: header
+        name: Authorization
         required: true
         type: string
       produces:

@@ -17,6 +17,37 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/auth": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Аутентификация",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Auth",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/api/v1/users": {
             "post": {
                 "consumes": [
@@ -62,6 +93,15 @@ const docTemplate = `{
                     "users"
                 ],
                 "summary": "Получить список всех пользователей",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Auth",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -96,6 +136,13 @@ const docTemplate = `{
                         "description": "Имя пользователя",
                         "name": "full_name_prefix",
                         "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Auth",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],
@@ -133,6 +180,13 @@ const docTemplate = `{
                         "description": "Логин",
                         "name": "username",
                         "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Auth",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],
@@ -177,6 +231,13 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/models.User"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Auth",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -205,6 +266,13 @@ const docTemplate = `{
                         "description": "Логин",
                         "name": "username",
                         "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Auth",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],

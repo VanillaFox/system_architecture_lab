@@ -10,6 +10,7 @@ import (
 	"github.com/VanillaFox/system_architecture_lab/conferences/app/services"
 	"github.com/VanillaFox/system_architecture_lab/conferences/restapi"
 	conferenceV1 "github.com/VanillaFox/system_architecture_lab/conferences/restapi/conferneces/v1"
+	"github.com/VanillaFox/system_architecture_lab/conferences/restapi/middlewares"
 	reportsV1 "github.com/VanillaFox/system_architecture_lab/conferences/restapi/reports/v1"
 
 	"github.com/gin-gonic/gin"
@@ -41,6 +42,10 @@ func main() {
 			panic(err)
 		}
 	}()
+
+	jwtSecretKey := []byte(os.Getenv("JWT_SECRET_KEY"))
+
+	middlewares.InitJwtSecretKey(jwtSecretKey)
 
 	conferencesCollection := client.Database("conf").Collection("conferences")
 	reportsCollections := client.Database("conf").Collection("reports")

@@ -51,6 +51,12 @@ paths:
     get:
       consumes:
       - application/json
+      parameters:
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -75,6 +81,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/models.ConferenceCreateModel'
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -93,6 +104,11 @@ paths:
       - description: ID конференции
         in: path
         name: conference_object_id
+        required: true
+        type: string
+      - description: Auth
+        in: header
+        name: Authorization
         required: true
         type: string
       produces:
@@ -124,6 +140,11 @@ paths:
         name: conference_object_id
         required: true
         type: string
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -142,6 +163,11 @@ paths:
       - description: ID конференции
         in: path
         name: object_id
+        required: true
+        type: string
+      - description: Auth
+        in: header
+        name: Authorization
         required: true
         type: string
       produces:
@@ -169,6 +195,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/models.ConferenceCreateModel'
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -187,6 +218,11 @@ paths:
       - description: ID доклада
         in: path
         name: report_object_id
+        required: true
+        type: string
+      - description: Auth
+        in: header
+        name: Authorization
         required: true
         type: string
       produces:
@@ -214,6 +250,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/models.ReportCreateModel'
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
