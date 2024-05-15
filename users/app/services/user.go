@@ -25,7 +25,7 @@ func (s *UserService) GetUserByUsername(ctx context.Context, username string) (*
 	return s.repository.GetByUsername(ctx, username)
 }
 
-func (s *UserService) GetUserByFullnamePrefix(ctx context.Context, fullNamePrefix string) (*models.Users, error) {
+func (s *UserService) GetUserByFullNamePrefix(ctx context.Context, fullNamePrefix string) (*models.Users, error) {
 	return s.repository.GetByFullNamePrefix(ctx, fullNamePrefix)
 }
 
