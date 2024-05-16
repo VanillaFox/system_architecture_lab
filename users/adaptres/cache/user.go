@@ -9,45 +9,56 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-const cacheExpirationTime = 3 * time.Minute
+const cacheExpirationTime = 1 * time.Minute
 
 func (c *Cache) GetUser(ctx context.Context, username string) (*models.User, error) {
 	user := &models.User{}
 
-	c.mu.RLock()
-	valBytes, err := c.rdb.Get(ctx, username).Bytes()
-	c.mu.RUnlock()
+	resultChan := make(chan *models.User)
+	errChan := make(chan error)
 
-	if err == redis.Nil {
-		user, err = c.repository.GetByUsername(ctx, username)
-
-		if err != nil {
-			return nil, err
+	go func() {
+		valBytes, err := c.rdb.Get(ctx, username).Bytes()
+		if err == nil {
+			err = json.Unmarshal(valBytes, user)
+			if err == nil {
+				resultChan <- user
+				return
+			}
+		} else if err != redis.Nil {
+			errChan <- err
+			return
 		}
 
-		userBytes, err := json.Marshal(user)
+		resultChan <- nil
+	}()
 
-		if err != nil {
-			return nil, err
+	select {
+	case user := <-resultChan:
+		if user != nil {
+			return user, nil
 		}
-
-		c.mu.Lock()
-		err = c.rdb.Set(ctx, username, userBytes, cacheExpirationTime).Err()
-		c.mu.Unlock()
-
-		if err != nil {
-			return nil, err
-		}
-
-		return user, nil
-	} else if err != nil {
+	case err := <-errChan:
 		return nil, err
+	case <-ctx.Done():
+		return nil, ctx.Err()
 	}
 
-	err = json.Unmarshal(valBytes, user)
+	user, err := c.repository.GetByUsername(ctx, username)
+
 	if err != nil {
 		return nil, err
 	}
+
+	go func() {
+		userBytes, err := json.Marshal(user)
+		if err != nil {
+			return
+		}
+
+		c.rdb.Set(ctx, username, userBytes, cacheExpirationTime)
+
+	}()
 
 	return user, nil
 }
