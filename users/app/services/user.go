@@ -3,26 +3,29 @@ package services
 import (
 	"context"
 
+	"github.com/VanillaFox/system_architecture_lab/users/adaptres/cache"
 	"github.com/VanillaFox/system_architecture_lab/users/adaptres/postgres"
 	"github.com/VanillaFox/system_architecture_lab/users/models"
 )
 
 type UserService struct {
 	repository *postgres.Repository
+	cache      *cache.Cache
 }
 
-func NewUserService(repository *postgres.Repository) *UserService {
+func NewUserService(repository *postgres.Repository, cache *cache.Cache) *UserService {
 	return &UserService{
 		repository: repository,
+		cache:      cache,
 	}
 }
 
 func (s *UserService) CreateUser(ctx context.Context, user *models.User) error {
-	return s.repository.CreateUser(ctx, user)
+	return s.cache.FirstSetUser(ctx, user)
 }
 
 func (s *UserService) GetUserByUsername(ctx context.Context, username string) (*models.User, error) {
-	return s.repository.GetByUsername(ctx, username)
+	return s.cache.GetUser(ctx, username)
 }
 
 func (s *UserService) GetUserByFullNamePrefix(ctx context.Context, fullNamePrefix string) (*models.Users, error) {
@@ -34,7 +37,7 @@ func (s *UserService) GetUsers(ctx context.Context) (models.Users, error) {
 }
 
 func (s *UserService) UpdateUser(ctx context.Context, username string, user *models.User) (*models.User, error) {
-	return s.repository.UpdateUser(ctx, username, user)
+	return s.cache.SetUser(ctx, username, user)
 }
 
 func (s *UserService) DeleteUser(ctx context.Context, username string) error {

@@ -6,9 +6,11 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/redis/go-redis/v9"
 	filesSwag "github.com/swaggo/files"
 	ginSwag "github.com/swaggo/gin-swagger"
 
+	"github.com/VanillaFox/system_architecture_lab/users/adaptres/cache"
 	"github.com/VanillaFox/system_architecture_lab/users/adaptres/postgres"
 	"github.com/VanillaFox/system_architecture_lab/users/app/services"
 	"github.com/VanillaFox/system_architecture_lab/users/restapi"
@@ -51,13 +53,29 @@ func main() {
 		panic(err)
 	}
 
+	rdbHost := os.Getenv("REDIS_HOST")
+	rdbPort := os.Getenv("REDIS_PORT")
+	rdbPass := os.Getenv("REDIS_PASSWORD")
+
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     fmt.Sprintf("%s:%s", rdbHost, rdbPort),
+		Password: rdbPass,
+		DB:       0,
+	})
+
+	// if err := rdb.Ping(ctx); err != nil {
+	// 	panic(err)
+	// }
+
 	jwtSecretKey := []byte(os.Getenv("JWT_SECRET_KEY"))
 
 	v1.InitJwtSecretKey(jwtSecretKey)
 
 	repository := postgres.NewRepository(pool)
 
-	userService := services.NewUserService(repository)
+	cache := cache.NewCache(rdb, repository)
+
+	userService := services.NewUserService(repository, cache)
 
 	authService := services.NewAuthService(repository, jwtSecretKey)
 
