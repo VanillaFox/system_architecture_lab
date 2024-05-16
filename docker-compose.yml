@@ -53,3 +53,15 @@ services:
       interval: 5s
       timeout: 5s
       retries: 3
+  redis:
+    build:
+      dockerfile: redis.dockerfile
+    container_name: redis
+    ports:
+      - "6379:6379"
+    env_file: variables.env
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 3

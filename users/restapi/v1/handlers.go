@@ -83,7 +83,7 @@ func (h *UserHandler) getUserByFullName(c *gin.Context) {
 
 	fullNamePrefix := c.Param("full_name_prefix")
 
-	result, err := h.userService.GetUserByFullnamePrefix(ctx, fullNamePrefix)
+	result, err := h.userService.GetUserByFullNamePrefix(ctx, fullNamePrefix)
 	if err != nil {
 		_ = c.Error(err)
 
