@@ -1,16 +1,15 @@
 package cache
 
 import (
-	"bytes"
 	"context"
-	"encoding/gob"
+	"encoding/json"
 	"time"
 
 	"github.com/VanillaFox/system_architecture_lab/users/models"
 	"github.com/redis/go-redis/v9"
 )
 
-const cacheExpirationTime = 1 * time.Minute
+const cacheExpirationTime = 3 * time.Minute
 
 func (c *Cache) GetUser(ctx context.Context, username string) (*models.User, error) {
 	user := &models.User{}
@@ -26,14 +25,14 @@ func (c *Cache) GetUser(ctx context.Context, username string) (*models.User, err
 			return nil, err
 		}
 
-		var userBytes bytes.Buffer
+		userBytes, err := json.Marshal(user)
 
-		if err := gob.NewEncoder(&userBytes).Encode(user); err != nil {
+		if err != nil {
 			return nil, err
 		}
 
 		c.mu.Lock()
-		err = c.rdb.Set(ctx, username, userBytes.Bytes(), cacheExpirationTime).Err()
+		err = c.rdb.Set(ctx, username, userBytes, cacheExpirationTime).Err()
 		c.mu.Unlock()
 
 		if err != nil {
@@ -45,9 +44,8 @@ func (c *Cache) GetUser(ctx context.Context, username string) (*models.User, err
 		return nil, err
 	}
 
-	reader := bytes.NewReader(valBytes)
-
-	if err := gob.NewDecoder(reader).Decode(user); err != nil {
+	err = json.Unmarshal(valBytes, user)
+	if err != nil {
 		return nil, err
 	}
 
@@ -61,16 +59,15 @@ func (c *Cache) FirstSetUser(ctx context.Context, user *models.User) error {
 		return err
 	}
 
-	var userBytes bytes.Buffer
-
 	userWithoutPassword := &models.User{FullName: user.FullName, Username: user.Username}
 
-	if err := gob.NewEncoder(&userBytes).Encode(userWithoutPassword); err != nil {
+	userBytes, err := json.Marshal(userWithoutPassword)
+	if err != nil {
 		return err
 	}
 
 	c.mu.Lock()
-	err = c.rdb.Set(ctx, userWithoutPassword.Username, userBytes.Bytes(), cacheExpirationTime).Err()
+	err = c.rdb.Set(ctx, userWithoutPassword.Username, userBytes, cacheExpirationTime).Err()
 	c.mu.Unlock()
 
 	if err != nil {
@@ -91,16 +88,15 @@ func (c *Cache) SetUser(ctx context.Context, username string, user *models.User)
 	c.rdb.Del(ctx, username)
 	c.mu.Unlock()
 
-	var userBytes bytes.Buffer
-
 	userWithoutPassword := &models.User{FullName: user.FullName, Username: user.Username}
 
-	if err := gob.NewEncoder(&userBytes).Encode(userWithoutPassword); err != nil {
+	userBytes, err := json.Marshal(userWithoutPassword)
+	if err != nil {
 		return nil, err
 	}
 
 	c.mu.Lock()
-	err = c.rdb.Set(ctx, userWithoutPassword.Username, userBytes.Bytes(), cacheExpirationTime).Err()
+	err = c.rdb.Set(ctx, userWithoutPassword.Username, userBytes, cacheExpirationTime).Err()
 	c.mu.Unlock()
 
 	if err != nil {
