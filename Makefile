@@ -8,6 +8,11 @@ swag-conferences:
 	mv ./docs/docs.go ./docs/conferences
 	mv ./docs/swagger.* ./docs/conferences
 
+swag-gateway:
+	swag i -g swagger_info.go --parseInternal --parseDependency --dir ./api-gateway 
+	mv ./docs/docs.go ./docs/apigateway
+	mv ./docs/swagger.* ./docs/apigateway
+
 run:
 	docker-compose up --build --no-deps --force-recreate -d
 
@@ -25,3 +30,9 @@ build-conferences:
 
 build-user:
 	go build -o /dev/null ./cmd/users/
+
+build-gateway:
+	go build -o /dev/null ./cmd/api-gateway/
+
+prune:
+	docker system prune -f --all

@@ -4,9 +4,9 @@ WORKDIR /app
 COPY go.mod .
 COPY go.sum .
 COPY . .
-RUN GOOS=linux GOARCH=amd64 go build -o main ./cmd/conferences/
+RUN GOOS=linux GOARCH=amd64 go build -o main ./cmd/api-gateway/
 
-FROM alpine/curl:8.1.2
+FROM debian:buster-slim
 WORKDIR /app
 COPY --from=builder /app/main /app
 ENTRYPOINT ["/app/main"]

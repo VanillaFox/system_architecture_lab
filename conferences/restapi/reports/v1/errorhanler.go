@@ -14,5 +14,5 @@ func HanleErrors(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusBadRequest, err)
+	c.JSON(http.StatusInternalServerError, err)
 }

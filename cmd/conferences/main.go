@@ -64,6 +64,7 @@ func main() {
 	r.Use()
 	url := ginSwag.URL("/swagger/doc.json")
 	r.GET("/swagger/*any", ginSwag.WrapHandler(filesSwag.Handler, url))
+	r.GET("/healthcheck", func(c *gin.Context) { c.JSON(http.StatusOK, gin.H{}) })
 	routerHandler.SetRoutes(r)
 
 	srv := http.Server{
