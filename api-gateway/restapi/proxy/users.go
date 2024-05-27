@@ -31,7 +31,7 @@ func (uh *UsersHandler) Handle(c *gin.Context) {
 	}
 
 	if resp == nil {
-		c.Status(http.StatusInternalServerError)
+		c.JSON(http.StatusServiceUnavailable, gin.H{"error": "service unavailable"})
 		return
 	}
 
