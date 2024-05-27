@@ -1,0 +1,456 @@
+definitions:
+  models.ConferenceCreateModel:
+    properties:
+      date:
+        example: "2015-09-15T14:00:12-00:00"
+        type: string
+      title:
+        example: Конференция по JS
+        type: string
+    type: object
+  models.ConferenceReadModel:
+    properties:
+      date:
+        example: "2015-09-15T14:00:12-00:00"
+        type: string
+      id:
+        type: string
+      title:
+        example: Конференция по JS
+        type: string
+    type: object
+  models.ReportCreateModel:
+    properties:
+      description:
+        example: Первый докад
+        type: string
+      title:
+        example: Доклад 1
+        type: string
+    type: object
+  models.ReportReadModel:
+    properties:
+      conference_object_id:
+        type: string
+      description:
+        example: Первый докад
+        type: string
+      id:
+        type: string
+      title:
+        example: Доклад 1
+        type: string
+    type: object
+  models.User:
+    properties:
+      full_name:
+        example: Иван Иванов
+        type: string
+      password:
+        example: pass
+        type: string
+      username:
+        example: ivan
+        type: string
+    type: object
+info:
+  contact:
+    name: Maria Kruglova
+  title: API gateway swagger
+  version: "1.0"
+paths:
+  /api/auth:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+      summary: Аутентификация
+      tags:
+      - auth
+  /api/v1/conferences:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ConferenceReadModel'
+            type: array
+        "500":
+          description: Internal Server Error
+      summary: Получение списка конференций
+      tags:
+      - conferences
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: conference body
+        in: body
+        name: conference
+        required: true
+        schema:
+          $ref: '#/definitions/models.ConferenceCreateModel'
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+      summary: Создать конференцию
+      tags:
+      - conferences
+  /api/v1/conferences/{conference_object_id}/reports:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID конференции
+        in: path
+        name: conference_object_id
+        required: true
+        type: string
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ReportReadModel'
+            type: array
+        "500":
+          description: Internal Server Error
+      summary: Получить доклады конференции
+      tags:
+      - reports
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: report body
+        in: body
+        name: conference
+        required: true
+        schema:
+          $ref: '#/definitions/models.ReportCreateModel'
+      - description: ID конференции
+        in: path
+        name: conference_object_id
+        required: true
+        type: string
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+      summary: Создать доклад
+      tags:
+      - reports
+  /api/v1/conferences/{object_id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID конференции
+        in: path
+        name: object_id
+        required: true
+        type: string
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+      summary: Удаление конференции
+      tags:
+      - conferences
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID конференции
+        in: path
+        name: object_id
+        required: true
+        type: string
+      - description: conference body
+        in: body
+        name: conference
+        required: true
+        schema:
+          $ref: '#/definitions/models.ConferenceCreateModel'
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+      summary: Обновление конференции
+      tags:
+      - conferences
+  /api/v1/reports/{report_object_id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID доклада
+        in: path
+        name: report_object_id
+        required: true
+        type: string
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+      summary: Удалить доклад
+      tags:
+      - reports
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID доклада
+        in: path
+        name: report_object_id
+        required: true
+        type: string
+      - description: report body
+        in: body
+        name: conference
+        required: true
+        schema:
+          $ref: '#/definitions/models.ReportCreateModel'
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+      summary: Обновить доклад
+      tags:
+      - reports
+  /api/v1/users:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: user body
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+      summary: Создать пользователя
+      tags:
+      - users
+  /api/v1/users/:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "500":
+          description: Internal Server Error
+      summary: Получить список всех пользователей
+      tags:
+      - users
+  /api/v1/users/{username}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Логин
+        in: path
+        name: username
+        required: true
+        type: string
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+      summary: Удалить пользователя
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Логин
+        in: path
+        name: username
+        required: true
+        type: string
+      - description: user body
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+      summary: Обновить пользователя
+      tags:
+      - users
+  /api/v1/users/fullname/{full_name_prefix}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Имя пользователя
+        in: path
+        name: full_name_prefix
+        required: true
+        type: string
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "500":
+          description: Internal Server Error
+      summary: Получить пользователя по маске ФИ
+      tags:
+      - users
+  /api/v1/users/username/{username}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Логин
+        in: path
+        name: username
+        required: true
+        type: string
+      - description: Auth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "500":
+          description: Internal Server Error
+      summary: Получить пользователя по логину
+      tags:
+      - users
+swagger: "2.0"

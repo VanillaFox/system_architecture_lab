@@ -63,10 +63,6 @@ func main() {
 		DB:       0,
 	})
 
-	// if err := rdb.Ping(ctx); err != nil {
-	// 	panic(err)
-	// }
-
 	jwtSecretKey := []byte(os.Getenv("JWT_SECRET_KEY"))
 
 	v1.InitJwtSecretKey(jwtSecretKey)
@@ -88,6 +84,7 @@ func main() {
 	r.Use()
 	url := ginSwag.URL("/swagger/doc.json")
 	r.GET("/swagger/*any", ginSwag.WrapHandler(filesSwag.Handler, url))
+	r.GET("/healthcheck", func(c *gin.Context) { c.JSON(http.StatusOK, gin.H{}) })
 	routerHandler.SetRoutes(r)
 
 	srv := http.Server{

@@ -1,4 +1,4 @@
-package v1
+package middlewares
 
 import (
 	"net/http"
@@ -14,5 +14,5 @@ func HanleErrors(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusInternalServerError, err)
+	c.JSON(http.StatusBadRequest, err)
 }
